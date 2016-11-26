@@ -10,6 +10,7 @@ public class Fixture
 {
     public enum matchStatus{SCHEDULED, FINISHED, TIMED} //Oynanmadı(planda), Bitti, Şuan Oynanıyor
 
+
     private int matchId; // {id}
     private int homeTeamId; // Ev Sahibi Takım Id {homeTeamId}
     private int awayTeamId; // Deplasman Takım Id {awayTeamId}
