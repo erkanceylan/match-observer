@@ -1,2 +1,2 @@
 # match-watcher
-Büyük liglere ait maç sonuçlarını, puan durumlarını ve oynanacak maçlara ait istatiktiksel skor tahminleri olan android uygulama
+Büyük liglere ait maç sonuçlarını, puan durumlarını ve oynanacak maçlara ait istatistiksel skor tahminleri olan android uygulama
