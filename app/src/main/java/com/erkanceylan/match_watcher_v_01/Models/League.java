@@ -10,7 +10,7 @@ import java.util.List;
 
 public class League
 {
-    public static String[] DefaultLeagues={"PL","ELC","BL1","DED","FL1","PPL","SA" };
+    public static String[] DefaultLeagues={"PL","ELC","BL1","DED","FL1","PPL","SA","PD" };
     public static int getImage(String abr)
     {
         switch (abr)
@@ -29,6 +29,8 @@ public class League
                 return R.drawable.sa;
             case "PPL":
                 return R.drawable.ppl;
+            case "PD":
+                return R.drawable.pd;
             default:
                 return R.mipmap.ic_launcher;
         }
@@ -38,7 +40,7 @@ public class League
     private int numberOfTeams; //Takım sayısı {numberOfTeams}
     private String leagueAbrevation; //Lig adı kısaltması {league}
     private String leagueName; //Lig adı {caption}
-    private int currentMatchDay; //Maç günü(kaçıncı hafta) {numberOfMatchDay}
+    private int currentMatchDay; //Maç günü(kaçıncı hafta) {currentMatchDay}
 
     private List<Team> standing;
 

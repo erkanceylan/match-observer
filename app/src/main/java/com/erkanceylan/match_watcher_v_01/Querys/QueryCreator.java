@@ -16,25 +16,21 @@ import okhttp3.ResponseBody;
  * Created by ERL on 28.10.2016.
  */
 
-public class SoundCloudApi
+public class QueryCreator
 {
+	private static final String xAuthToken="757f3cedfc534a7e8f728788cb8f6473";
+	private static final String xResponseControl="minified";
+	private static final String url="http://api.football-data.org";
+
 	OkHttpClient client = new OkHttpClient();
 
-	public void run(String url, HashMap<String, String> parameters, final Callback callback) throws Exception {
-
-		StringBuilder queryStr = new StringBuilder();
-		for (Object key : parameters.keySet()) {
-			Object value = parameters.get(key);
-			queryStr.append(key + "=" + value);
-			queryStr.append("&");
-		}
-
-		url = url + "?" + queryStr.toString();
-
+	public void run(String parameters, final Callback callback) throws Exception
+	{
 		Request request = new Request.Builder()
-				.url(url)
+				.url(url + parameters)
+				.addHeader("X-Auth-Token",xAuthToken)
+				.addHeader("X-Response-Control",xResponseControl)
 				.build();
-
 		client.newCall(request).enqueue(new Callback() {
 			@Override public void onFailure(Call call, IOException e) {
 				callback.onFailure(call, e);
@@ -50,21 +46,16 @@ public class SoundCloudApi
 		});
 	}
 
-	public Response runSync(String url, HashMap<String, String> parameters) throws Exception{
-		StringBuilder queryStr = new StringBuilder();
-		for (Object key : parameters.keySet()) {
-			Object value = parameters.get(key);
-			queryStr.append(key + "=" + value);
-			queryStr.append("&");
-		}
-
-		url = url + "?" + queryStr.toString();
-
+	public Response runSync(String parameters) throws Exception
+	{
 		Request request = new Request.Builder()
-				.url(url)
+				.url(url + parameters)
+				.addHeader("X-Auth-Token",xAuthToken)
+				.addHeader("X-Response-Control",xResponseControl)
 				.build();
 
 		Response response = client.newCall(request).execute();
+		Log.e("Response",response.body().string());
 		return response;
 	}
 }

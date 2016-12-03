@@ -10,30 +10,29 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.erkanceylan.match_watcher_v_01.Models.Team;
+import com.erkanceylan.match_watcher_v_01.Models.Fixture;
 import com.erkanceylan.match_watcher_v_01.R;
 import com.erkanceylan.match_watcher_v_01.Utilities.COLOR;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 /**
  * Created by ERKAN on 7.11.2016.
  */
 
-public class MatchResultsAdapter extends ArrayAdapter<Team>
+public class MatchResultsAdapter extends ArrayAdapter<Fixture>
 {
-    ArrayList<Team> teams;
+    ArrayList<Fixture> fixtures;
     Context context;
     int resource;
-    String leagueAbr;
     int tvResourceId;
-    public MatchResultsAdapter(Context context, int resource, int textViewResourceId, ArrayList<Team> objects, String leagueAbr)
+    public MatchResultsAdapter(Context context, int resource, int textViewResourceId, ArrayList<Fixture> objects)
     {
         super(context, resource, textViewResourceId, objects);
 
         this.tvResourceId=textViewResourceId;
-        this.leagueAbr=leagueAbr;
-        this.teams=objects;
+        this.fixtures=objects;
         this.context=context;
         this.resource=resource;
     }
@@ -43,40 +42,20 @@ public class MatchResultsAdapter extends ArrayAdapter<Team>
         if(convertView==null)
         {
             LayoutInflater inflater=(LayoutInflater)getContext().getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-            convertView=inflater.inflate(R.layout.standings_layout,null,true);
+            convertView=inflater.inflate(R.layout.match_results_layout,null,true);
         }
-        Team thisTeam=getItem(position);
+        Fixture thisFixture=getItem(position);
 
-        ImageView leagueImageView=(ImageView)convertView.findViewById(R.id.imgStandingsTeamPicture);
-        TextView teamName=(TextView)convertView.findViewById(R.id.txtStandingsTeamName);
-        TextView stats=(TextView)convertView.findViewById(R.id.txtStandingsStats);
-        TextView rank=(TextView)convertView.findViewById(R.id.txtRank);
+        TextView dateText=(TextView)convertView.findViewById(R.id.txtDate);
+        TextView fixtureText=(TextView)convertView.findViewById(R.id.txtFixtureText);
+
         TextView txtview=(TextView)convertView.findViewById(tvResourceId);
 
-        rank.setBackgroundColor(COLOR.getRankColor(this.leagueAbr,position+1));
-        leagueImageView.setImageResource(R.mipmap.ic_launcher);
-        rank.setText(Integer.toString(position+1));
-        teamName.setText(thisTeam.getTeamName());
-        Log.e("->",thisTeam.getTeamName());
-        String playedGames=Integer.toString(thisTeam.getPlayedGames());
-        String goalDiff=Integer.toString(thisTeam.getGoalDifference());
-        String points=Integer.toString(thisTeam.getPoints());
-
-
-        stats.setText(StatsEditor(playedGames)+" "+StatsEditor(goalDiff)+" "+StatsEditor(points));
+        SimpleDateFormat sdf1 = new SimpleDateFormat("dd / MM / yyyy");
+        SimpleDateFormat sdf2 = new SimpleDateFormat("HH : mm");
+        dateText.setText(sdf1.format(thisFixture.getDate())+"\n"+sdf2.format(thisFixture.getDate()));
+        fixtureText.setText(thisFixture.getHomeTeamName()+" "+thisFixture.getGoalsHomeTeam()+" - "+thisFixture.getGoalsAwayTeam()+" "+thisFixture.getAwayTeamName());
 
         return super.getView(position,convertView,parent);
-    }
-
-    private String StatsEditor(String str)
-    {
-        if(str.length()<3)
-        {
-            for (str.length(); str.length()<3;)
-            {
-                str=" "+str;
-            }
-        }
-        return str;
     }
 }

@@ -1,13 +1,48 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="layout.Standings">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/standingsLeagueImage"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="32dp"
+            android:layout_marginStart="32dp" />
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/standingsLeagueName"
+            android:layout_marginLeft="38dp"
+            android:layout_marginStart="38dp"
+            android:layout_marginBottom="34dp"
+            android:textSize="26sp"
+            android:layout_above="@+id/standingsListView"
+            android:layout_toRightOf="@+id/standingsLeagueImage"
+            android:layout_toEndOf="@+id/standingsLeagueImage" />
+
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/standingsListView"
+            android:layout_below="@+id/standingsLeagueImage"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+    </RelativeLayout>
+
+
 
 </FrameLayout>

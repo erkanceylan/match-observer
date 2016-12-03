@@ -32,7 +32,7 @@ import okhttp3.Response;
  * Created by ERKAN on 1.12.2016.
  */
 
-public class TahministTab extends Fragment
+public class MatchResultsTab extends Fragment
 {
     private ArrayList<Fixture> fixtureList;
     @Override
@@ -53,7 +53,7 @@ public class TahministTab extends Fragment
             try
             {
                 QueryCreator query=new QueryCreator();
-                query.run(QueryStringBuilder.getFixturesForLeagueAndWeek(LeagueTabbedActivity.bundle.getString("id"),LeagueTabbedActivity.bundle.getInt("currentMatchday")), new Callback() {
+                query.run(QueryStringBuilder.getLastFixturesForLeagueAndWeek(LeagueTabbedActivity.bundle.getString("id"),LeagueTabbedActivity.bundle.getInt("currentMatchday")), new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e)
                     {

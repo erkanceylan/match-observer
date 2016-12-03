@@ -8,22 +8,21 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.erkanceylan.match_watcher_v_01.Adapters.LeagueListAdapter;
 import com.erkanceylan.match_watcher_v_01.Models.League;
-import com.erkanceylan.match_watcher_v_01.Querys.Query;
-import com.erkanceylan.match_watcher_v_01.Querys.QueryBuilder;
+import com.erkanceylan.match_watcher_v_01.Querys.QueryCreator;
+import com.erkanceylan.match_watcher_v_01.Querys.QueryStringBuilder;
 import com.erkanceylan.match_watcher_v_01.Utilities.JsonToObject;
-
-import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
+import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -37,14 +36,41 @@ public class MainActivity extends AppCompatActivity
 
     //Json verisinden çekilip ayıklanacak ve ListView'de gösterilecek olan League nesne listesi.
     private ArrayList<League> leagueList;
-    private String leagueJson;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         init();
-        new LeagueCreator().execute();
+        QueryCreator query=new QueryCreator();
+        try
+        {
+            query.run(QueryStringBuilder.getAllLeague(), new Callback() {
+                        @Override
+                        public void onFailure(Call call, IOException e)
+                        {
+                            //TODO: Can't create handler inside thread that has not called Looper.prepare()
+                            Toast.makeText(getApplicationContext(),"AGA OLAY VAR",Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onResponse(Call call, Response response) throws IOException
+                        {
+                            final String leagueJson=response.body().string();
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run()
+                                {
+                                    ShowLeagues(leagueJson);
+                                }
+                            });
+                        }
+                    }
+                    );
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e("Queryy","Çağırılıyor");
+        }
     }
 
     private void init()
@@ -64,12 +90,15 @@ public class MainActivity extends AppCompatActivity
         leagueListView=(ListView)findViewById(R.id.leaguesListView);
     }
 
-    public void ShowLeagues()
+    public void ShowLeagues(String leagueJson)
     {
-            leagueList = JsonToObject.GetLeaguesFromJson(leagueJson);
-            LeagueListAdapter adapter=new LeagueListAdapter(this,R.layout.league_list_layout,R.id.textView, leagueList);
-            leagueListView.setAdapter(adapter);
-            leagueListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        if(leagueJson==null)return;
+
+        leagueList = JsonToObject.GetLeaguesFromJson(leagueJson);
+        LeagueListAdapter adapter=new LeagueListAdapter(this,R.layout.league_list_layout,R.id.textView, leagueList);
+        leagueListView.setAdapter(adapter);
+
+        leagueListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
@@ -77,42 +106,16 @@ public class MainActivity extends AppCompatActivity
                 Toast.makeText(getApplicationContext(),league.getLeagueName(), Toast.LENGTH_SHORT).show();
 
                 Intent intent=new Intent(getApplicationContext(), LeagueTabbedActivity.class);
-                intent.putExtra("LeagueAbrevation",league.getLeagueAbrevation());
+                Bundle packet=new Bundle();
+                packet.putString("id",Integer.toString(league.getId()));
+                packet.putInt("currentMatchday",league.getCurrentMatchDay());
+                packet.putString("LeagueAbrevation",league.getLeagueAbrevation());
+                packet.putString("LeagueName",league.getLeagueName());
+                intent.putExtras(packet);
                 Log.e("INTENT: ","Çalıştı");
                 startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_bottom);
             }
         });
-    }
-    class LeagueCreator extends AsyncTask<String, Void, String>
-    {
-        @Override
-        protected String doInBackground(String... params)
-        {
-            String xAuthToken="757f3cedfc534a7e8f728788cb8f6473";
-            String xResponseControl="minified";
-            String url="http://api.football-data.org";
-
-            OkHttpClient client = new OkHttpClient();
-            Request request = new Request.Builder()
-                    .url(url+"/v1/competitions").addHeader("X-Auth-Token",xAuthToken)
-                    .addHeader("X-Response-Control",xResponseControl)
-                    .build();
-
-            Response response = null;
-            try {
-                response = client.newCall(request).execute();
-                return response.body().string();
-            } catch (IOException e) {
-                e.printStackTrace();
-                return null;
-            }
-
-        }
-        @Override
-        protected void onPostExecute(String json)
-        {
-            leagueJson=json;
-            ShowLeagues();
-        }
     }
 }

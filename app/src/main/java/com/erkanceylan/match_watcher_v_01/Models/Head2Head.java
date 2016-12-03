@@ -15,6 +15,9 @@ public class Head2Head
     private int awayTeamWins; //Deplasman takımının kazandığı maç sayısı{head2head > awayTeamWins}
     private int draws; //Beraberlik sayısı {head2head > draws}
 
+    private int totalHomeTeamsGoals;
+    private int totalAwayTeamGoals;
+
     private Fixture lastHomeWinHomeTeam; // Ev sahibinin 'evinde' son kazandığı maç{head2head > lastHomeWinHomeTeam}
     private Fixture lastWinHomeTeam; // Ev sahibinin son kazandığı maç {head2head > lastWinHomeTeam}
     private Fixture lastAwatWinAwayTeam; // Deplasman takımının 'deplasmanda' son kazandığı maç {head2head > lastAwayWinAwayTeam}
