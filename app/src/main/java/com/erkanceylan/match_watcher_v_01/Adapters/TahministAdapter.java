@@ -39,12 +39,12 @@ public class TahministAdapter extends ArrayAdapter<Fixture>
         if(convertView==null)
         {
             LayoutInflater inflater=(LayoutInflater)getContext().getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-            convertView=inflater.inflate(R.layout.match_results_layout,null,true);
+            convertView=inflater.inflate(R.layout.tahminist_layout,null,true);
         }
         Fixture thisFixture=getItem(position);
 
-        TextView dateText=(TextView)convertView.findViewById(R.id.txtDate);
-        TextView fixtureText=(TextView)convertView.findViewById(R.id.txtFixtureText);
+        TextView dateText=(TextView)convertView.findViewById(R.id.txtTahministDate);
+        TextView fixtureText=(TextView)convertView.findViewById(R.id.txtTahministFixtureText);
 
         TextView txtview=(TextView)convertView.findViewById(tvResourceId);
 

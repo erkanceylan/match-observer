@@ -19,7 +19,6 @@ import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
-import layout.Standings;
 
 /**
  * Created by ERKAN on 7.11.2016.
@@ -52,14 +51,12 @@ public class StandingsAdapter extends ArrayAdapter<Team>
         }
         Team thisTeam=getItem(position);
 
-        ImageView leagueImageView=(ImageView)convertView.findViewById(R.id.imgStandingsTeamPicture);
         TextView teamName=(TextView)convertView.findViewById(R.id.txtStandingsTeamName);
         TextView stats=(TextView)convertView.findViewById(R.id.txtStandingsStats);
         TextView rank=(TextView)convertView.findViewById(R.id.txtRank);
         TextView txtview=(TextView)convertView.findViewById(tvResourceId);
 
         rank.setBackgroundColor(COLOR.getRankColor(this.leagueAbr,position+1));
-        leagueImageView.setImageResource(R.mipmap.ic_launcher);
         rank.setText(Integer.toString(position+1));
         teamName.setText(thisTeam.getTeamName());
         Log.e("->",thisTeam.getTeamName());
@@ -75,9 +72,9 @@ public class StandingsAdapter extends ArrayAdapter<Team>
 
     private String StatsEditor(String str)
     {
-        if(str.length()<3)
+        if(str.length()<7)
         {
-            for (str.length(); str.length()<3;)
+            for (str.length(); str.length()<7;)
             {
                 str=" "+str;
             }

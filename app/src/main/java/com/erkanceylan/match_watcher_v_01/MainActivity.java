@@ -1,7 +1,6 @@
 package com.erkanceylan.match_watcher_v_01;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,13 +22,10 @@ import java.util.ArrayList;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity
 {
-    private Button button;
     private ListView leagueListView;
 
     private TextView editText;
@@ -75,17 +71,6 @@ public class MainActivity extends AppCompatActivity
 
     private void init()
     {
-        button=(Button)findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v)
-            {
-                Intent gecis=new Intent(getApplicationContext(), LeagueTabbedActivity.class);
-                button.setText("Çalıştı");
-                Log.i("Çalıştı","Çalıştı");
-                startActivity(gecis);
-            }
-        });
         editText=(TextView)findViewById(R.id.mainText);
         leagueListView=(ListView)findViewById(R.id.leaguesListView);
     }

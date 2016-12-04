@@ -27,7 +27,7 @@ public class Fixture
 
     //Oynanmış maçların için fixture constructor'ı
 
-    public Fixture(Date date, matchStatus status, String homeTeamName, String awayTeamName, int goalsHomeTeam, int goalsAwayTeam)
+    public Fixture(int id, Date date, matchStatus status, String homeTeamName, String awayTeamName, int goalsHomeTeam, int goalsAwayTeam)
     {
         this.status = status;
         this.goalsAwayTeam = goalsAwayTeam;

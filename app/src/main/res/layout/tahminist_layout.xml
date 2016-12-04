@@ -11,37 +11,31 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:visibility="invisible"
-        android:id="@+id/lanetTextView"/>
+        android:id="@+id/lanetTextView3"/>
 
     <TextView
         android:text="1"
-        android:layout_width="40dp"
+        android:layout_width="25dp"
         android:layout_height="wrap_content"
-        android:id="@+id/txtRank"
+        android:id="@+id/txtTahministDate"
         android:layout_weight="1"
         android:textAlignment="center"
-        android:textSize="24sp"
+        android:textSize="16sp"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="15dp"
-        android:textColor="#ffffff"/>
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:textColor="@android:color/holo_blue_dark"/>
 
 
     <TextView
         android:text=""
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:id="@+id/txtStandingsTeamName"
+        android:id="@+id/txtTahministFixtureText"
         android:layout_weight="1"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="15dp"
-        android:textSize="22sp" />
-    <TextView
-        android:text="TextView"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/txtStandingsStats"
-        android:layout_weight="1"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="15dp"
-        android:textSize="22sp" />
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:textSize="22sp"
+        android:textColor="#000000" />
 </LinearLayout>

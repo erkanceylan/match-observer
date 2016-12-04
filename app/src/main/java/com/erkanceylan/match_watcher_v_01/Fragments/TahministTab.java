@@ -22,6 +22,7 @@ import com.erkanceylan.match_watcher_v_01.R;
 import com.erkanceylan.match_watcher_v_01.Utilities.JsonToObject;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import okhttp3.Call;
@@ -34,15 +35,16 @@ import okhttp3.Response;
 
 public class TahministTab extends Fragment
 {
+    private ArrayList<Integer> idList;
     private ArrayList<Fixture> fixtureList;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         //Önce viewler'i elde edelim.
-        View rootView = inflater.inflate(R.layout.fragment_match_results, container, false);
-        final ListView standingsListView=(ListView)rootView.findViewById(R.id.matchResultsListView);
-        ImageView leagueImage=(ImageView)rootView.findViewById(R.id.matchResultsLeagueImage);
-        TextView leagueNameText=(TextView)rootView.findViewById(R.id.matchResultsLeagueName);
+        View rootView = inflater.inflate(R.layout.fragment_tahminist, container, false);
+        final ListView standingsListView=(ListView)rootView.findViewById(R.id.tahministListView);
+        ImageView leagueImage=(ImageView)rootView.findViewById(R.id.tahministLeagueImage);
+        TextView leagueNameText=(TextView)rootView.findViewById(R.id.tahministLeagueName);
 
         //Sonra sorgu yapalım.
         if(fixtureList==null)
@@ -70,25 +72,33 @@ public class TahministTab extends Fragment
                     public void onResponse(Call call, Response response) throws IOException
                     {
                         String fixturesJson=response.body().string();
-                        fixtureList = JsonToObject.GetFixturesFromJson(fixturesJson);
-                        final MatchResultsAdapter adapter=new MatchResultsAdapter(getContext(),R.layout.fragment_match_results,R.id.lanetTextView2, fixtureList);
-
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run()
-                            {
-                                Log.e("***","ADAPTER SET EDILDI");
-                                standingsListView.setAdapter(adapter);
-                                standingsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        idList = JsonToObject.GetFixtureIdsFromJson(fixturesJson);
+                        QueryCreator myQuery = new QueryCreator();
+                        for (int id:idList) {
+                            try {
+                                myQuery.run(QueryStringBuilder.getFixture(Integer.toString(id)), new Callback() {
                                     @Override
-                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+                                    public void onFailure(Call call, IOException e) {
+                                        getActivity().runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                Toast.makeText(getContext(), "Bir hata oluştu", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    }
+
+
+                                    @Override
+                                    public void onResponse(Call call, Response response) throws IOException
                                     {
-                                        Fixture fixture = fixtureList.get(position);
-                                        Toast.makeText(getContext(), fixture.getHomeTeamName()+" vs "+fixture.getAwayTeamName(), Toast.LENGTH_SHORT).show();
+                                        Log.d("JSON:", response.body().string());
+                                        //fixtureList.add(JsonToObject.GetFixtureFromJson(response.body().string()));
                                     }
                                 });
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
-                        });
+                        }
                     }
                 });
 

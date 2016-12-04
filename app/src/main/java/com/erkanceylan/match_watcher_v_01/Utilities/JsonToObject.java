@@ -103,6 +103,32 @@ public class JsonToObject
         return teams;
     }
 
+    public static ArrayList<Integer> GetFixtureIdsFromJson(String json)
+    {
+        ArrayList<Integer> idList=new ArrayList<Integer>();
+        try
+        {
+            JSONObject fixturesObject = new JSONObject(json);
+            JSONArray fixtureList = fixturesObject.getJSONArray("fixtures");
+            Log.e("TOPLAM SAYISI: ","" + fixtureList.length());
+            for (int i=0; i<fixtureList.length();i++) {
+                Log.e("FİXTURELER DÖNÜLÜYOR", "i: " + i);
+                JSONObject fixtureObject = fixtureList.getJSONObject(i);
+                idList.add(fixtureObject.getInt("id"));
+            }
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+
+        return idList;
+    }
+    public static Fixture GetFixtureFromJson(String json)
+    {
+        //TODO fixture çekilecek, head2head filan
+        return null;
+    }
     public static ArrayList<Fixture> GetFixturesFromJson(String json)
     {
 
@@ -110,7 +136,7 @@ public class JsonToObject
         Date date;//Maç tarihi
         Fixture.matchStatus matchStatus; //Match Durumu
         String homeTeamName, awayTeamName;
-        int goalsHomeTeam,goalsAwayTeam;
+        int id, goalsHomeTeam,goalsAwayTeam;
 
 
         try
@@ -122,6 +148,7 @@ public class JsonToObject
             {
                 Log.e("TAKIMLAR DÖNÜLÜYOR","i: "+i);
                 JSONObject fixtureObject=fixtureList.getJSONObject(i);
+                id=fixtureObject.getInt("id");
 
                 //Sistem Zamanını alalım.
                 Calendar cal = Calendar.getInstance();
@@ -145,6 +172,9 @@ public class JsonToObject
                     case "TIMED":
                         matchStatus = Fixture.matchStatus.TIMED;
                         break;
+                    case "IN_PLAY":
+                        matchStatus = Fixture.matchStatus.IN_PLAY;
+                        break;
                     default:
                         matchStatus = Fixture.matchStatus.FINISHED;
 
@@ -160,7 +190,7 @@ public class JsonToObject
                     goalsAwayTeam=resultObject.getInt("goalsAwayTeam");
 
                     Log.e("YENI FIXTURE",": "+homeTeamName+" vs "+awayTeamName);
-                    fixtures.add(new Fixture(date,matchStatus,homeTeamName,awayTeamName,goalsHomeTeam,goalsAwayTeam));
+                    fixtures.add(new Fixture(id, date,matchStatus,homeTeamName,awayTeamName,goalsHomeTeam,goalsAwayTeam));
                 }
              //   else
                //     fixtures.add(new Fixture(date,matchStatus,homeTeamName,awayTeamName,goalsHomeTeam,goalsAwayTeam));
