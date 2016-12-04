@@ -73,9 +73,9 @@ public class COLOR
                     return COLOR.ChampionsLeagueQualification;
                 else if(position<7)
                     return COLOR.UEFAEuropeLeague;
-                else if(position<17)
+                else if(position<16)
                     return COLOR.NormalRank;
-                else if(position==18)
+                else if(position==16)
                     return COLOR.PlayOut;
                 else
                     return COLOR.LeagueDown;

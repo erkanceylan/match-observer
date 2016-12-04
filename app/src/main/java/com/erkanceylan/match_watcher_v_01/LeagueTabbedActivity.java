@@ -167,11 +167,11 @@ public class LeagueTabbedActivity extends AppCompatActivity
             switch (position)
             {
                 case 0:
-                    return getString(R.string.match_results);
+                    return getResources().getString(R.string.match_results);
                 case 1:
-                    return getString(R.string.standings);
+                    return getResources().getString(R.string.standings);
                 case 2:
-                    return getString(R.string.tahminist);
+                    return getResources().getString(R.string.tahminist);
             }
             return null;
         }

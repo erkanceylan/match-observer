@@ -95,7 +95,7 @@ public class MatchResultsTab extends Fragment
             }
             catch (Exception e)
             {
-                Toast.makeText(getContext(),"Internet bağlantısı yok !",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),getResources().getString(R.string.internet_connection_alert),Toast.LENGTH_SHORT).show();
                 Log.e("Internet yok, i think","Thats very sad for you");
                 e.printStackTrace();
                 return null;

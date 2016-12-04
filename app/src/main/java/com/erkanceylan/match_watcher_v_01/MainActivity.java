@@ -1,6 +1,10 @@
 package com.erkanceylan.match_watcher_v_01;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -41,31 +45,54 @@ public class MainActivity extends AppCompatActivity
         QueryCreator query=new QueryCreator();
         try
         {
-            query.run(QueryStringBuilder.getAllLeague(), new Callback() {
-                        @Override
-                        public void onFailure(Call call, IOException e)
-                        {
-                            //TODO: Can't create handler inside thread that has not called Looper.prepare()
-                            Toast.makeText(getApplicationContext(),"AGA OLAY VAR",Toast.LENGTH_SHORT).show();
-                        }
+            if(isOnline())
+            {
+                query.run(QueryStringBuilder.getAllLeague(), new Callback() {
+                            @Override
+                            public void onFailure(Call call, IOException e)
+                            {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run()
+                                    {
+                                        Toast.makeText(getApplicationContext(),"Internet bağlantısı problemi !",Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
 
-                        @Override
-                        public void onResponse(Call call, Response response) throws IOException
-                        {
-                            final String leagueJson=response.body().string();
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run()
-                                {
-                                    ShowLeagues(leagueJson);
-                                }
-                            });
+                            @Override
+                            public void onResponse(Call call, Response response) throws IOException
+                            {
+                                final String leagueJson=response.body().string();
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run()
+                                    {
+                                        ShowLeagues(leagueJson);
+                                    }
+                                });
+                            }
                         }
-                    }
-                    );
+                        );
+            }
+
+            else
+            {
+                Log.d("*********","THERE IS NO INTERNET CONNECTION");
+                AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+
+                // 2. Chain together various setter methods to set the dialog characteristics
+                builder.setMessage(getResources().getString(R.string.internet_connection_alert))
+                        .setTitle(getResources().getString(R.string.internet_connection_alert_title));
+
+                // 3. Get the AlertDialog from create()
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+
         } catch (Exception e) {
-            e.printStackTrace();
-            Log.e("Queryy","Çağırılıyor");
+                e.printStackTrace();
+                Log.e("Queryy","Çağırılıyor");
         }
     }
 
@@ -75,6 +102,13 @@ public class MainActivity extends AppCompatActivity
         leagueListView=(ListView)findViewById(R.id.leaguesListView);
     }
 
+    public boolean isOnline()
+    {
+        ConnectivityManager cm =(ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        boolean connection=netInfo != null && netInfo.isConnectedOrConnecting();
+        return connection;
+    }
     public void ShowLeagues(String leagueJson)
     {
         if(leagueJson==null)return;
