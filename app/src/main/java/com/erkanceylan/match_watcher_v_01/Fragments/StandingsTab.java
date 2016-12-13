@@ -106,4 +106,16 @@ public class StandingsTab extends Fragment
         }
         return rootView;
     }
+
+    public Team getTeamById(int _id)
+    {
+        for (Team team : teamList)
+        {
+            if(team.getTeamId()==_id)
+            {
+                return team;
+            }
+        }
+        return null;
+    }
 }

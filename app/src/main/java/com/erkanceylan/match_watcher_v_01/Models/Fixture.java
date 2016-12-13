@@ -1,5 +1,7 @@
 package com.erkanceylan.match_watcher_v_01.Models;
 
+import android.util.Log;
+
 import java.util.Date;
 
 /**
@@ -29,6 +31,7 @@ public class Fixture
 
     public Fixture(int id, Date date, matchStatus status, String homeTeamName, String awayTeamName, int goalsHomeTeam, int goalsAwayTeam)
     {
+        this.matchId=id;
         this.status = status;
         this.goalsAwayTeam = goalsAwayTeam;
         this.goalsHomeTeam = goalsHomeTeam;
@@ -40,18 +43,15 @@ public class Fixture
 
     //Analiz edilecek maçlar için fixture constructor'ı
 
-    public Fixture(int matchId, int homeTeamId, int awayTeamId, String homeTeamName, String awayTeamName, int leagueId, int matchDay, Date date, matchStatus status, int goalsHomeTeam, int goalsAwayTeam, Head2Head head2head) {
+    public Fixture(int matchId, String homeTeamName, String awayTeamName, int homeTeamId, int awayTeamId, Date date, matchStatus status, Head2Head head2head)
+    {
         this.matchId = matchId;
-        this.homeTeamId = homeTeamId;
-        this.awayTeamId = awayTeamId;
         this.homeTeamName = homeTeamName;
         this.awayTeamName = awayTeamName;
-        this.leagueId = leagueId;
-        this.matchDay = matchDay;
+        this.homeTeamId=homeTeamId;
+        this.awayTeamId=awayTeamId;
         this.date = date;
         this.status = status;
-        this.goalsHomeTeam = goalsHomeTeam;
-        this.goalsAwayTeam = goalsAwayTeam;
         this.head2head = head2head;
     }
 
@@ -149,5 +149,12 @@ public class Fixture
 
     public void setHead2head(Head2Head head2head) {
         this.head2head = head2head;
+    }
+
+    public void Print()
+    {
+        Log.d("Fixture"," MatchId "+matchId+"\n");
+        if(getHead2head()!=null)
+            getHead2head().Print();
     }
 }

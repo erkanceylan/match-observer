@@ -34,11 +34,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/leaguesListView"
-        android:layout_marginTop="17dp"
-        android:layout_below="@+id/mainText"
+        android:layout_below="@+id/imageView2"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="54dp" />
 
 
 </RelativeLayout>

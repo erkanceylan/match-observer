@@ -4,6 +4,7 @@ package com.erkanceylan.match_watcher_v_01.Utilities;
 import android.util.Log;
 
 import com.erkanceylan.match_watcher_v_01.Models.Fixture;
+import com.erkanceylan.match_watcher_v_01.Models.Head2Head;
 import com.erkanceylan.match_watcher_v_01.Models.League;
 import com.erkanceylan.match_watcher_v_01.Models.Team;
 
@@ -71,7 +72,7 @@ public class JsonToObject
     public static ArrayList<Team> GetTeamsFromJson(String json)
     {
         ArrayList<Team> teams=new ArrayList<Team>();
-        int id, playedGames,points,goalDifference;
+        int id, playedGames,points,goals,goalDifference;
         String teamName, imageUri;
 
         try
@@ -86,19 +87,19 @@ public class JsonToObject
                 id=teamObject.getInt("teamId");
                 playedGames=teamObject.getInt("playedGames");
                 points=teamObject.getInt("points");
+                goals=teamObject.getInt("goals");
                 goalDifference=teamObject.getInt("goalDifference");
                 teamName=teamObject.getString("team");
                 imageUri=teamObject.getString("crestURI");
 
                 Log.e("YENI TEAM","adı:"+teamName);
-                teams.add(new Team(id,teamName,playedGames,points,goalDifference,imageUri));
+                teams.add(new Team(id,teamName,playedGames,points,goalDifference,goals,imageUri));
             }
         }
         catch (JSONException e)
         {
             e.printStackTrace();
         }
-
 
         return teams;
     }
@@ -124,11 +125,102 @@ public class JsonToObject
 
         return idList;
     }
-    public static Fixture GetFixtureFromJson(String json)
+
+    public static Fixture GetFixtureWithHead2HeadFromJson(String json)
     {
         //TODO fixture çekilecek, head2head filan
+        //Fixture nesnesi
+
+        Fixture fixture;
+
+        Date date;//Maç tarihi
+        Fixture.matchStatus matchStatus; //Match Durumu
+        String homeTeamName, awayTeamName;
+        int id, homeTeamId, awayTeamId;
+
+        //Head2Head nesnesi
+        Head2Head head2head;
+        int count;
+        int homeTeamWins; //Ev sahibinin kazandığı maç sayısı{head2head > homeTeamWins}
+        int awayTeamWins; //Deplasman takımının kazandığı maç sayısı{head2head > awayTeamWins}
+        int draws; //Beraberlik sayısı {head2head > draws}
+        int totalHomeTeamsGoals=0;
+        int totalAwayTeamGoals=0;
+
+        try
+        {
+            JSONObject jsonObject = new JSONObject(json);
+            JSONObject fixtureObject = jsonObject.getJSONObject("fixture");
+
+            id=fixtureObject.getInt("id");
+
+            //Sistem Zamanını alalım.
+            Calendar cal = Calendar.getInstance();
+            TimeZone tz = cal.getTimeZone();
+                /* debug: is it local time? */
+            Log.d("Time zone: ", tz.getDisplayName());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+            sdf.setTimeZone(tz);
+            date = sdf.parse(fixtureObject.getString("date"));
+            String statusStr=fixtureObject.getString("status");
+            switch (statusStr)
+            {
+                case "FINISHED":
+                    matchStatus = Fixture.matchStatus.FINISHED;
+                    break;
+                case "SCHEDULED":
+                    matchStatus = Fixture.matchStatus.SCHEDULED;
+                    break;
+                case "TIMED":
+                    matchStatus = Fixture.matchStatus.TIMED;
+                    break;
+                case "IN_PLAY":
+                    matchStatus = Fixture.matchStatus.IN_PLAY;
+                    break;
+                default:
+                    matchStatus = Fixture.matchStatus.FINISHED;
+            }
+
+            homeTeamName=fixtureObject.getString("homeTeamName");
+            awayTeamName=fixtureObject.getString("awayTeamName");
+            homeTeamId=fixtureObject.getInt("homeTeamId");
+            awayTeamId=fixtureObject.getInt("awayTeamId");
+
+            JSONObject head2HeadObject=jsonObject.getJSONObject("head2head");
+            count=head2HeadObject.getInt("count");
+            homeTeamWins=head2HeadObject.getInt("homeTeamWins");
+            awayTeamWins=head2HeadObject.getInt("awayTeamWins");
+            draws=head2HeadObject.getInt("draws");
+
+            {
+                JSONArray lastFixtures=head2HeadObject.getJSONArray("fixtures");
+                for (int i=0;i<lastFixtures.length();i++)
+                {
+                    JSONObject match=lastFixtures.getJSONObject(i);
+                    if(homeTeamName.equals(match.getString("homeTeamName")))
+                    {
+                        totalHomeTeamsGoals++;
+                    }
+                    else
+                    {
+                        totalAwayTeamGoals++;
+                    }
+
+                }
+            }
+
+            head2head=new Head2Head(count,homeTeamWins,awayTeamWins,draws,totalHomeTeamsGoals,totalAwayTeamGoals);
+            fixture=new Fixture(id,homeTeamName,awayTeamName,homeTeamId, awayTeamId, date,matchStatus,head2head);
+            return fixture;
+    }
+        catch (ParseException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         return null;
     }
+
     public static ArrayList<Fixture> GetFixturesFromJson(String json)
     {
 
@@ -137,7 +229,6 @@ public class JsonToObject
         Fixture.matchStatus matchStatus; //Match Durumu
         String homeTeamName, awayTeamName;
         int id, goalsHomeTeam,goalsAwayTeam;
-
 
         try
         {

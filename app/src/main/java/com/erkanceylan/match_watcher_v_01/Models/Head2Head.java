@@ -1,16 +1,15 @@
 package com.erkanceylan.match_watcher_v_01.Models;
 
+import android.util.Log;
+
 /**
  * Created by ERKAN on 20.11.2016.
  */
 
 public class Head2Head
 {
-    private int fixtureId; // {fixture > id}
     private int count; // Toplam oynadıkları maç sayısı {head2head > count}
 
-    private int homeTeamId; //Ev sahibi takım id {fixture > homeTeamId}
-    private int awayTeamId; //Deplasman takım id {fixture > awayTeamId}
     private int homeTeamWins; //Ev sahibinin kazandığı maç sayısı{head2head > homeTeamWins}
     private int awayTeamWins; //Deplasman takımının kazandığı maç sayısı{head2head > awayTeamWins}
     private int draws; //Beraberlik sayısı {head2head > draws}
@@ -18,8 +17,42 @@ public class Head2Head
     private int totalHomeTeamsGoals;
     private int totalAwayTeamGoals;
 
-    private Fixture lastHomeWinHomeTeam; // Ev sahibinin 'evinde' son kazandığı maç{head2head > lastHomeWinHomeTeam}
-    private Fixture lastWinHomeTeam; // Ev sahibinin son kazandığı maç {head2head > lastWinHomeTeam}
-    private Fixture lastAwatWinAwayTeam; // Deplasman takımının 'deplasmanda' son kazandığı maç {head2head > lastAwayWinAwayTeam}
-    private Fixture lastWinAwayTeam; // Deplasman takımının son kazandığı maç {head2head > lastWinAwayTeam}
+    public int getCount() {
+        return count;
+    }
+
+    public int getHomeTeamWins() {
+        return homeTeamWins;
+    }
+
+    public int getAwayTeamWins() {
+        return awayTeamWins;
+    }
+
+    public int getDraws() {
+        return draws;
+    }
+
+    public int getTotalHomeTeamsGoals() {
+        return totalHomeTeamsGoals;
+    }
+
+    public int getTotalAwayTeamGoals() {
+        return totalAwayTeamGoals;
+    }
+
+    public Head2Head(int count, int homeTeamWins, int awayTeamWins, int draws, int totalHomeTeamsGoals, int totalAwayTeamGoals)
+    {
+        this.count = count;
+        this.homeTeamWins = homeTeamWins;
+        this.awayTeamWins = awayTeamWins;
+        this.draws = draws;
+        this.totalHomeTeamsGoals = totalHomeTeamsGoals;
+        this.totalAwayTeamGoals = totalAwayTeamGoals;
+    }
+
+    public void Print()
+    {
+        Log.d("Head2Head"," Count: "+count+" HomeTeamWins: "+homeTeamWins+" AwayTeamwins: "+awayTeamWins+" Draws: "+draws+" AwayTeamGoals "+totalAwayTeamGoals+" HomeTeamGoals "+totalHomeTeamsGoals);
+    }
 }

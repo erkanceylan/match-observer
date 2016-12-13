@@ -1,6 +1,7 @@
 package com.erkanceylan.match_watcher_v_01;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -84,7 +85,6 @@ public class MainActivity extends AppCompatActivity
                 // 2. Chain together various setter methods to set the dialog characteristics
                 builder.setMessage(getResources().getString(R.string.internet_connection_alert))
                         .setTitle(getResources().getString(R.string.internet_connection_alert_title));
-
                 // 3. Get the AlertDialog from create()
                 AlertDialog dialog = builder.create();
                 dialog.show();

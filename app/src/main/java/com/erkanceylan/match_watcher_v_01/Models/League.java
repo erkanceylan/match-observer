@@ -10,7 +10,7 @@ import java.util.List;
 
 public class League
 {
-    public static String[] DefaultLeagues={"PL","ELC","BL1","DED","FL1","PPL","SA","PD" };
+    public static String[] DefaultLeagues={"PL","BL1","DED","FL1","PPL","SA","PD" };
     public static int getImage(String abr)
     {
         switch (abr)

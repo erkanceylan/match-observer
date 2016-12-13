@@ -48,13 +48,14 @@ public class Team
         return imageUri;
     }
 
-    public Team(int teamId, String teamName, int playedGames, int points, int goalDifference, String imageUri )
+    public Team(int teamId, String teamName, int playedGames, int points, int goalDifference,int goals , String imageUri )
     {
         this.teamId = teamId;
         this.teamName = teamName;
         this.playedGames = playedGames;
         this.points = points;
         this.goalDifference = goalDifference;
+        this.goals=goals;
         this.imageUri=imageUri;
     }
     public Team(int teamId, String teamName, int playedGames, int points, int goals, int goalsAgainst, int goalDifference, String imageUri) {

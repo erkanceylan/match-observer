@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.erkanceylan.match_watcher_v_01.Adapters.MatchResultsAdapter;
+import com.erkanceylan.match_watcher_v_01.Adapters.TahministAdapter;
 import com.erkanceylan.match_watcher_v_01.LeagueTabbedActivity;
 import com.erkanceylan.match_watcher_v_01.Models.Fixture;
 import com.erkanceylan.match_watcher_v_01.Models.League;
@@ -20,6 +21,7 @@ import com.erkanceylan.match_watcher_v_01.Querys.QueryCreator;
 import com.erkanceylan.match_watcher_v_01.Querys.QueryStringBuilder;
 import com.erkanceylan.match_watcher_v_01.R;
 import com.erkanceylan.match_watcher_v_01.Utilities.JsonToObject;
+import com.erkanceylan.match_watcher_v_01.Utilities.Tahmin.TahministReyis;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
@@ -36,7 +38,7 @@ import okhttp3.Response;
 public class TahministTab extends Fragment
 {
     private ArrayList<Integer> idList;
-    private ArrayList<Fixture> fixtureList;
+    private ArrayList<TahministReyis> fixtureList;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -46,6 +48,7 @@ public class TahministTab extends Fragment
         ImageView leagueImage=(ImageView)rootView.findViewById(R.id.tahministLeagueImage);
         TextView leagueNameText=(TextView)rootView.findViewById(R.id.tahministLeagueName);
 
+        final StandingsTab standingsFragment=(StandingsTab) getActivity().getSupportFragmentManager().getFragments().get(1);
         //Sonra sorgu yapalım.
         if(fixtureList==null)
         {
@@ -73,15 +76,20 @@ public class TahministTab extends Fragment
                     {
                         String fixturesJson=response.body().string();
                         idList = JsonToObject.GetFixtureIdsFromJson(fixturesJson);
+                        fixtureList=new ArrayList<TahministReyis>();
                         QueryCreator myQuery = new QueryCreator();
-                        for (int id:idList) {
+                        for (int i=0;i<idList.size();i++)
+                        {
+                            final int id=idList.get(i);
                             try {
+                                final int finalI = i;
                                 myQuery.run(QueryStringBuilder.getFixture(Integer.toString(id)), new Callback() {
                                     @Override
                                     public void onFailure(Call call, IOException e) {
                                         getActivity().runOnUiThread(new Runnable() {
                                             @Override
-                                            public void run() {
+                                            public void run()
+                                            {
                                                 Toast.makeText(getContext(), "Bir hata oluştu", Toast.LENGTH_SHORT).show();
                                             }
                                         });
@@ -91,10 +99,36 @@ public class TahministTab extends Fragment
                                     @Override
                                     public void onResponse(Call call, Response response) throws IOException
                                     {
-                                        Log.d("JSON:", response.body().string());
-                                        //fixtureList.add(JsonToObject.GetFixtureFromJson(response.body().string()));
+                                        String jsonStr=response.body().string();
+                                        Log.d("JSON:"+ id, jsonStr);
+                                        Fixture fxt=(JsonToObject.GetFixtureWithHead2HeadFromJson(jsonStr));
+
+                                        TahministReyis reyis=new TahministReyis(fxt,standingsFragment.getTeamById(fxt.getHomeTeamId()).getPlayedGames(),standingsFragment.getTeamById(fxt.getAwayTeamId()).getPlayedGames(),standingsFragment.getTeamById(fxt.getHomeTeamId()).getPoints(),standingsFragment.getTeamById(fxt.getAwayTeamId()).getPoints(),standingsFragment.getTeamById(fxt.getHomeTeamId()).getGoals(),standingsFragment.getTeamById(fxt.getAwayTeamId()).getGoals());
+                                        reyis.Print();
+                                        if(reyis!=null)
+                                            fixtureList.add(reyis);
+                                        if((finalI +1)==idList.size())
+                                        {
+                                            final TahministAdapter adapter = new TahministAdapter(getContext(), R.layout.fragment_tahminist, R.id.lanetTextView3, fixtureList);
+
+                                            getActivity().runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    Log.e("***", "ADAPTER SET EDILDI");
+                                                    standingsListView.setAdapter(adapter);
+                                                    standingsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                                        @Override
+                                                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                                            TahministReyis fixture = fixtureList.get(position);
+                                                            Toast.makeText(getContext(), fixture.getHomeTeamName() + " vs " + fixture.getAwayTeamName(), Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                        }
                                     }
                                 });
+
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
